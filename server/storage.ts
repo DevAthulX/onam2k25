@@ -50,6 +50,7 @@ export class MemStorage implements IStorage {
       ...insertValidation,
       id,
       createdAt: new Date(),
+      sessionId: insertValidation.sessionId ?? null, // ✅ ensures no undefined
     };
     this.nameValidations.set(id, validation);
     return validation;
