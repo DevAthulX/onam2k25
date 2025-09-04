@@ -1,0 +1,40 @@
+
+
+> **Act as a professional web developer and UI/UX designer.**
+> Generate a **mobile-first, fully responsive, visually stunning Onam festival website** with the following features:
+>
+> 1. **User Interaction:**
+>
+>    * When the website loads, **prompt the user to enter their name or nickname**.
+>    * Use the entered name in all greeting messages and animations (e.g., “🌸 Happy Onam, \[Name]! 🌸”).
+>    * Store the name temporarily in the browser (`localStorage`) so that it persists during the session.
+> 2. **Background & Theme:**
+>
+>    * Deep **black background** for contrast.
+>    * Include **animated Maveli/King Mahabali character** in a tasteful, modern animation style.
+>    * **Multicolored Attam/flower patterns (Pookalam)** that are interactive and layered.
+> 3. **Design & Aesthetics:**
+>
+>    * Modern, **high-end UI with classic Indian festival motifs**.
+>    * Use **smooth animations, transitions, particle effects**, and subtle parallax scrolling.
+>    * Incorporate a **surprise element**: e.g., a hidden animation, festive fireworks, or interactive mini-game triggered by tapping/clicking.
+> 4. **Performance & Tech Stack:**
+>
+>    * Optimized for **mobile devices** first, fully responsive across all screens.
+>    * Use **modern web technologies**: HTML5, CSS3 (with animations & gradients), JavaScript/ES6, WebGL or Canvas for animations.
+>    * Lightweight and fast-loading with optimized assets.
+>    * Optionally include **soft festive music or sound effects** that can be toggled on/off.
+> 5. **Interactivity:**
+>
+>    * Touch-friendly animations for mobile users.
+>    * Hover/tap effects for buttons and flower patterns.
+>    * Smooth scroll and visually appealing call-to-action sections.
+> 6. **Luxury feel:**
+>
+>    * The overall website should feel **high-end**, elegant, and **worth a \$50,000 professional design**.
+>    * Focus on **color harmony, symmetry, and modern festival aesthetics**.
+>
+> Generate the **complete HTML, CSS, and JavaScript code**, ready to deploy.
+> Include **comments in the code** to explain interactive or animated sections, and make sure the user’s entered name is **dynamically integrated** in the greeting and animations.
+
+---
