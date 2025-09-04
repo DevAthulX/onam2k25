@@ -6,11 +6,8 @@
   
   
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "npm run db:migrate && vite build && tsc -p tsconfig.server.json",
-    "start": "NODE_ENV=production node dist/server/index.js",
-    "db:migrate": "drizzle-kit push:pg"
-  }
+  "build": "npm run db:migrate && vite build && tsc -p tsconfig.server.json"
+}
 
 
 ,

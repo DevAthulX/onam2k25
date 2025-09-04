@@ -1,13 +1,13 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["server/**/*", "shared/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "include": ["server/index.ts", "server/storage/**/*", "shared/**/*"],
+  "exclude": ["server/vite.ts", "vite.config.ts"],
   "compilerOptions": {
     "noEmit": false,
     "outDir": "dist/server",
     "module": "CommonJS",
     "target": "ES2020",
-    "moduleResolution": "node",        // ✅ override bundler
-    "allowImportingTsExtensions": false // ✅ disable
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false
   }
 }
