@@ -75,7 +75,7 @@ export default function NameInputModal({ onSubmit, onClose }: NameInputModalProp
                 filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3))'
               }}
             >
-              Welcome to Onam 2024!
+              Welcome to Onam 2025!
             </motion.h2>
 
             <motion.p
