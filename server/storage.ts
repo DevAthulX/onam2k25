@@ -1,54 +1,78 @@
-import { Pool } from "pg";
 import { randomUUID } from "crypto";
 import {
   type User,
   type InsertUser,
   type NameValidation,
   type InsertNameValidation,
-} from "../shared/schema.js";
+} from "../shared/schema.js"; // ✅ fixed alias + added .js
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Railway URL
-});
+export interface IStorage {
+  getUser(id: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
 
-export class DbStorage {
+  // Name validation methods
+  getNameValidation(name: string): Promise<NameValidation | undefined>;
+  createNameValidation(
+    validation: InsertNameValidation
+  ): Promise<NameValidation>;
+  getNameValidationsBySession(sessionId: string): Promise<NameValidation[]>;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<string, User>;
+  private nameValidations: Map<string, NameValidation>;
+
+  constructor() {
+    this.users = new Map();
+    this.nameValidations = new Map();
+  }
+
   async getUser(id: string): Promise<User | undefined> {
-    const res = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-    return res.rows[0];
+    return this.users.get(id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const res = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
-    return res.rows[0];
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username
+    );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const res = await pool.query(
-      "INSERT INTO users (id, username, email) VALUES ($1, $2, $3) RETURNING *",
-      [id, insertUser.username, insertUser.email]
-    );
-    return res.rows[0];
+    // ✅ Only username + password, no email
+    const user: User = { ...insertUser, id };
+    this.users.set(id, user);
+    return user;
   }
 
   async getNameValidation(name: string): Promise<NameValidation | undefined> {
-    const res = await pool.query("SELECT * FROM name_validations WHERE LOWER(name) = LOWER($1)", [name]);
-    return res.rows[0];
-  }
-
-  async createNameValidation(insertValidation: InsertNameValidation): Promise<NameValidation> {
-    const id = randomUUID();
-    const res = await pool.query(
-      "INSERT INTO name_validations (id, name, created_at, session_id) VALUES ($1, $2, NOW(), $3) RETURNING *",
-      [id, insertValidation.name, insertValidation.sessionId ?? null]
+    return Array.from(this.nameValidations.values()).find(
+      (validation) => validation.name.toLowerCase() === name.toLowerCase()
     );
-    return res.rows[0];
   }
 
-  async getNameValidationsBySession(sessionId: string): Promise<NameValidation[]> {
-    const res = await pool.query("SELECT * FROM name_validations WHERE session_id = $1", [sessionId]);
-    return res.rows;
+  async createNameValidation(
+    insertValidation: InsertNameValidation
+  ): Promise<NameValidation> {
+    const id = randomUUID();
+    const validation: NameValidation = {
+      ...insertValidation,
+      id,
+      createdAt: new Date(),
+      sessionId: insertValidation.sessionId ?? null,
+    };
+    this.nameValidations.set(id, validation);
+    return validation;
+  }
+
+  async getNameValidationsBySession(
+    sessionId: string
+  ): Promise<NameValidation[]> {
+    return Array.from(this.nameValidations.values()).filter(
+      (validation) => validation.sessionId === sessionId
+    );
   }
 }
 
-export const storage = new DbStorage();
+export const storage = new MemStorage();
