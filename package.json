@@ -4,11 +4,10 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "db:migrate": "drizzle-kit push",
-    "build": "npm run db:migrate && vite build && tsc -p tsconfig.server.json",
-    "start": "NODE_ENV=production node dist/server/index.js",
-    "dev": "nodemon server/index.ts"
-  },
+  "build": "tsc -p tsconfig.server.json",
+  "start": "NODE_ENV=production node dist/server/index.js"
+}
+,
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
