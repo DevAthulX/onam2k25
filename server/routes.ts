@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertNameValidationSchema } from "@shared/schema";
+import { storage } from "./storage.js"; // ✅ added .js
+import { insertNameValidationSchema } from "../shared/schema.js"; // ✅ fixed alias
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -9,15 +9,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/validate-name", async (req, res) => {
     try {
       const { name, sessionId } = req.body;
-      
-      if (!name || typeof name !== 'string' || name.trim().length < 2) {
-        return res.status(400).json({ 
-          error: "Name must be at least 2 characters long" 
+
+      if (!name || typeof name !== "string" || name.trim().length < 2) {
+        return res.status(400).json({
+          error: "Name must be at least 2 characters long",
         });
       }
 
       const trimmedName = name.trim();
-      
+
       // Check if we already validated this name
       const existingValidation = await storage.getNameValidation(trimmedName);
       if (existingValidation) {
@@ -25,7 +25,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           name: existingValidation.name,
           isReal: existingValidation.isReal,
           comment: existingValidation.comment,
-          cached: true
+          cached: true,
         });
       }
 
@@ -45,13 +45,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         name: validation.name,
         isReal: validation.isReal,
         comment: validation.comment,
-        cached: false
+        cached: false,
       });
-
     } catch (error) {
       console.error("Name validation error:", error);
-      res.status(500).json({ 
-        error: "Failed to validate name" 
+      res.status(500).json({
+        error: "Failed to validate name",
       });
     }
   });
@@ -64,8 +63,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(validations);
     } catch (error) {
       console.error("Session validation error:", error);
-      res.status(500).json({ 
-        error: "Failed to retrieve validations" 
+      res.status(500).json({
+        error: "Failed to retrieve validations",
       });
     }
   });
@@ -76,41 +75,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 // Name validation logic
 function validateNameLogic(name: string): boolean {
-  // Real names typically have these characteristics
   const commonRealNames = [
-    'john', 'jane', 'alex', 'sarah', 'mike', 'lisa', 'david', 'anna', 
-    'raj', 'priya', 'rahul', 'kavya', 'arjun', 'maya', 'rohan', 'sneha',
-    'aarav', 'ananya', 'ishaan', 'tara', 'vikram', 'pooja', 'karan', 'riya'
+    "john", "jane", "alex", "sarah", "mike", "lisa", "david", "anna",
+    "raj", "priya", "rahul", "kavya", "arjun", "maya", "rohan", "sneha",
+    "aarav", "ananya", "ishaan", "tara", "vikram", "pooja", "karan", "riya",
   ];
 
   const lowerName = name.toLowerCase();
-  
-  // Check if it's a common real name
   if (commonRealNames.includes(lowerName)) {
     return true;
   }
 
-  // Check for obvious fake patterns
   const fakePatterns = [
     /^test/i, /^fake/i, /^demo/i, /^sample/i, /^user/i, /^admin/i,
     /^guest/i, /^temp/i, /^placeholder/i, /^example/i, /^default/i,
-    /123/, /abc/, /xyz/, /qwerty/i, /asdf/i, /^a+$/, /^x+$/
+    /123/, /abc/, /xyz/, /qwerty/i, /asdf/i, /^a+$/, /^x+$/,
   ];
 
-  const isFakePattern = fakePatterns.some(pattern => pattern.test(name));
-  if (isFakePattern) {
+  if (fakePatterns.some((pattern) => pattern.test(name))) {
     return false;
   }
 
-  // Check for reasonable name characteristics
   const hasReasonableLength = name.length >= 2 && name.length <= 25;
   const hasValidCharacters = /^[a-zA-Z\s\-'\.]+$/.test(name);
   const notAllSameChar = !/^(.)\1+$/.test(name);
-  
+
   return hasReasonableLength && hasValidCharacters && notAllSameChar;
 }
 
-// Generate humorous comments based on validation
+// Generate humorous comments
 function generateHumorousComment(name: string, isReal: boolean): string {
   if (isReal) {
     const realNameComments = [
@@ -118,7 +111,7 @@ function generateHumorousComment(name: string, isReal: boolean): string {
       `Excellent choice, ${name}! Your parents clearly had good taste in names. The king approves! ✨`,
       `${name}, what a beautiful name! Even the Devas are nodding in approval! 🌟`,
       `Wonderful! ${name} has such a melodious ring to it - perfect for the Onam festivities! 🎵`,
-      `${name}, your name carries the wisdom of ages. King Mahabali welcomes you with open arms! 🤗`
+      `${name}, your name carries the wisdom of ages. King Mahabali welcomes you with open arms! 🤗`,
     ];
     return realNameComments[Math.floor(Math.random() * realNameComments.length)];
   } else {
@@ -128,7 +121,7 @@ function generateHumorousComment(name: string, isReal: boolean): string {
       `"${name}" - now that's what we call thinking outside the coconut! 🥥 Mahabali laughs heartily and welcomes you anyway! 😄`,
       `Creative name choice, "${name}"! 🎭 Did you perhaps consult the royal jester for naming advice? Either way, the celebration continues! 🎊`,
       `"${name}"... interesting! 🧐 King Mahabali has ruled for eons and has never heard that one before! Points for originality! ⭐`,
-      `Well hello there, "${name}"! 😂 That's either a very avant-garde name or someone got creative at the keyboard! Welcome regardless! 🌸`
+      `Well hello there, "${name}"! 😂 That's either a very avant-garde name or someone got creative at the keyboard! Welcome regardless! 🌸`,
     ];
     return fakeNameComments[Math.floor(Math.random() * fakeNameComments.length)];
   }
