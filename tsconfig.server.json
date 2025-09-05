@@ -1,13 +1,17 @@
 {
-  "extends": "./tsconfig.json",
-  "include": ["server/index.ts", "server/storage/**/*", "shared/**/*"],
-  "exclude": ["server/vite.ts", "vite.config.ts"],
   "compilerOptions": {
-    "noEmit": false,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "node16",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "outDir": "dist/server",
-    "module": "CommonJS",
-    "target": "ES2020",
-    "moduleResolution": "node",
-    "allowImportingTsExtensions": false
-  }
+    "rootDir": "server",
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": ["server/**/*", "shared/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
