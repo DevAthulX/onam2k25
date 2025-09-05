@@ -1,6 +1,7 @@
+
 {
   "compilerOptions": {
-    "rootDir": "src/server",
+    "rootDir": "server",
     "outDir": "dist/server",
     "moduleResolution": "Node16",
     "module": "Node16",
@@ -9,5 +10,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src/server/**/*", "src/shared/**/*"]
+  "include": ["server/**/*", "shared/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
